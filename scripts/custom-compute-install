@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# snap has a recent enough version of cmake
+yum install -y epel-release
+yum install -y snapd
+systemctl enable --now snapd.socket
+ln -sf /var/lib/snapd/snap /snap
+
+PACKAGES=(
+        'gcc-c++'
+        'llvm-devel'
+        'llvm-static'
+        'openmpi-devel'
+        'libxml2-devel'
+        'libatomic'
+    )
+
+
+PY_PACKAGES=(
+        'conan'
+    )
+
+echo "Installing katana's dev environment"
+
+libcypher=libcypher-parser-0.6.2
+wget https://github.com/cleishm/libcypher-parser/releases/download/v0.6.2/${libcypher}.tar.gz
+tar xf ${libcypher}.tar.gz
+cd ${libcypher} && ./configure && make clean check && make install
+
+until ( snap install cmake --classic ) ; do
+    echo "snap failed to install cmake. Trying again in 5 seconds"
+    sleep 5
+done
+
+echo "yum install -y ${PACKAGES[*]}"
+until ( yum install -y ${PACKAGES[*]} > /dev/null ) ; do
+    echo "yum failed to install packages. Trying again in 5 seconds"
+    sleep 5
+done
+
+
+echo   "pip3 install --upgrade ${PY_PACKAGES[*]}"
+until ( pip3 install --upgrade ${PY_PACKAGES[*]} ) ; do
+    echo "pip3 failed to install python packages. Trying again in 5 seconds"
+    sleep 5
+done
+
+# install arrow v1
+sudo dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/apache-arrow-release-1.0.0-1.el8.noarch.rpm
+sudo dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/parquet-devel-1.0.1-1.el8.x86_64.rpm
