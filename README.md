@@ -1,3 +1,20 @@
+# Katana Tweaks
+
+This fork is tweaked to make the environment it generates amenable to katana.
+Tweaks include:
+ * bumping the CentOS version; katana requires at least gcc-7,  gcc-8 is the
+   default on CentOS 8
+ * changing [scripts/custom-compute-install](scripts/custom-compute-install)
+   to install the necessary dependencies
+
+[dev-cluster-deployment.yaml](dev-cluster-deployment.yaml) is a good starting
+point for a katana cluster.
+
+A note: building katana in CentOS requires `module load mpi` because of how
+CentOS installs mpi. Other than that the build steps are pretty much the same.
+
+## from here down is the original readme
+
 # Slurm on Google Cloud Platform
 
 **NOTE: This will be the last release supporting Deployment Manager. Please
@@ -442,3 +459,4 @@ For more information see:
      * /var/log/slurm/*.log
      * **NOTE:** syslog and all Slurm logs can be viewed in [GCP Console's Logs Viewer](https://console.cloud.google.com/logs/viewer).
    * check GCP quotas
+
