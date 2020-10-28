@@ -25,7 +25,7 @@ PACKAGES=(
         'libibumad'
         'lua'
         'lua-devel'
-        'man2html'
+        #'man2html'
         'mariadb'
         'mariadb-devel'
         'mariadb-server'
@@ -47,7 +47,7 @@ PACKAGES=(
         'vim'
         'wget'
         'tmux'
-        'pdsh'
+        #'pdsh'
         'openmpi'
         'yum-utils'
     )
