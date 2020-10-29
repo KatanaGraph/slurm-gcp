@@ -13,6 +13,7 @@ PACKAGES=(
         'openmpi-devel'
         'libxml2-devel'
         'libatomic'
+        'libuuid-devel'
     )
 
 
