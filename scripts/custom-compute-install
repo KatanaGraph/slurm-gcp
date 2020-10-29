@@ -20,6 +20,8 @@ PACKAGES=(
 
 PY_PACKAGES=(
         'conan'
+        'pipenv'
+        'sphinx'
     )
 
 echo "Installing katana's dev environment"
