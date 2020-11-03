@@ -14,7 +14,11 @@ PACKAGES=(
         'libxml2-devel'
         'libatomic'
         'libuuid-devel'
+        'docker-ce'
+        'docker-ce-cli'
+        'containerd.io'
         'python3-devel'
+        'jq'
     )
 
 
@@ -22,6 +26,11 @@ PY_PACKAGES=(
         'conan'
         'pipenv'
         'sphinx'
+        'numpy'
+        'pandas'
+        'qgrid'
+        'matplotlib'
+        'wheel'
     )
 
 echo "Installing katana's dev environment"
@@ -35,6 +44,9 @@ until ( snap install cmake --classic ) ; do
     echo "snap failed to install cmake. Trying again in 5 seconds"
     sleep 5
 done
+
+# make yum aware of docker repos
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 echo "yum install -y ${PACKAGES[*]}"
 until ( yum install -y ${PACKAGES[*]} > /dev/null ) ; do
@@ -50,5 +62,12 @@ until ( pip3 install --upgrade ${PY_PACKAGES[*]} ) ; do
 done
 
 # install arrow v1
-sudo dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/apache-arrow-release-1.0.0-1.el8.noarch.rpm
-sudo dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/parquet-devel-1.0.1-1.el8.x86_64.rpm
+dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/apache-arrow-release-1.0.0-1.el8.noarch.rpm
+dnf install -y https://apache.bintray.com/arrow/centos/8/x86_64/Packages/parquet-devel-1.0.1-1.el8.x86_64.rpm
+
+until ( systemctl enable docker && systemctl start docker ) ; do
+    echo "failed to start docker service. Trying again in 5 seconds"
+    sleep 5
+done
+
+(cd /etc/ssl/certs && ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ca-certificates.crt)
